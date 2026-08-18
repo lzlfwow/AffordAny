@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   BookOpen,
   Box,
@@ -40,16 +40,27 @@ function SiteNav() {
 function HeroGallery() {
   return (
     <div className="hero-gallery" aria-label="Candidate AffordAny examples">
-      {heroCandidates.map((item) => (
+      {heroCandidates.map((item, index) => (
         <figure className="hero-case" key={item.id}>
           <div className="case-media">
             <div>
               <span>Monocular RGB</span>
-              <img src={item.source} alt={`${item.label} in its source image`} />
+              <img
+                src={item.source}
+                alt={`${item.label} in its source image`}
+                loading={index < 2 ? "eager" : "lazy"}
+                decoding="async"
+                fetchPriority={index === 0 ? "high" : "auto"}
+              />
             </div>
             <div>
               <span>3D affordance</span>
-              <img src={item.prediction} alt={`${item.target} affordance prediction for ${item.label}`} />
+              <img
+                src={item.prediction}
+                alt={`${item.target} affordance prediction for ${item.label}`}
+                loading={index < 2 ? "eager" : "lazy"}
+                decoding="async"
+              />
             </div>
           </div>
           <figcaption>
@@ -102,7 +113,7 @@ function PaperOverview() {
         <p>From real-world images to open-world 3D interaction regions.</p>
       </div>
       <figure className="paper-figure original-figure">
-        <img src="assets/paper/teaser.svg" alt="AffordAny paper teaser" />
+        <img src="assets/paper/teaser.svg" alt="AffordAny paper teaser" loading="lazy" decoding="async" />
         <figcaption>The original teaser figure from the paper. <a href="assets/paper/teaser.pdf" target="_blank" rel="noreferrer">Open original PDF</a></figcaption>
       </figure>
     </section>
@@ -128,7 +139,7 @@ function DatasetSection() {
         {stats.map(([value, label]) => <div key={label}><strong>{value}</strong><span>{label}</span></div>)}
       </div>
       <figure className="paper-figure pipeline-figure">
-        <img src="assets/paper/pipeline.webp" alt="AffordAny dataset construction pipeline" />
+        <img src="assets/paper/pipeline.webp" alt="AffordAny dataset construction pipeline" loading="lazy" decoding="async" />
       </figure>
       <div className="pipeline-steps">
         {pipelineStages.map(([number, title, body]) => (
@@ -174,7 +185,7 @@ function DatasetExplorer() {
             className={sample.id === selected.id ? "active" : ""}
             onClick={() => setSelectedId(sample.id)}
           >
-            <img src={sample.images.source} alt="" />
+            <img src={sample.images.source} alt="" loading="lazy" decoding="async" />
             <span><strong>{sample.category}</strong><small>{sample.part}</small></span>
           </button>
         ))}
@@ -188,7 +199,12 @@ function DatasetExplorer() {
       </div>
       <div className="explorer-main">
         <div className="sample-image-wrap">
-          <img src={selected.images[imageMode]} alt={`${modeLabels[imageMode]} for ${selected.category}`} />
+          <img
+            src={selected.images[imageMode]}
+            alt={`${modeLabels[imageMode]} for ${selected.category}`}
+            loading="lazy"
+            decoding="async"
+          />
         </div>
         <aside className="sample-meta">
           <span>{selected.split}</span>
@@ -208,10 +224,31 @@ function InteractiveSection() {
   const [objectIndex, setObjectIndex] = useState(0);
   const [partIndex, setPartIndex] = useState(1);
   const [mode, setMode] = useState<ViewerMode>("affordance");
+  const [viewerReady, setViewerReady] = useState(false);
+  const viewerHost = useRef<HTMLDivElement>(null);
   const object = heroObjects[objectIndex];
   const part = object.parts[Math.min(partIndex, object.parts.length - 1)];
 
   useEffect(() => setPartIndex(object.id === "wok" ? 1 : 0), [object.id]);
+
+  useEffect(() => {
+    const host = viewerHost.current;
+    if (!host || typeof IntersectionObserver === "undefined") {
+      setViewerReady(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setViewerReady(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "400px" },
+    );
+    observer.observe(host);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section className="interactive-section" id="interactive">
@@ -220,8 +257,12 @@ function InteractiveSection() {
           <h2>Interactive 3D Examples</h2>
           <p>Rotate the reconstructed object and compare geometry, part annotations, and predicted affordance.</p>
         </div>
-        <div className="point-viewer-shell">
-          <PointCloudViewer object={object} part={part} mode={mode} />
+        <div className="point-viewer-shell" ref={viewerHost}>
+          {viewerReady ? (
+            <PointCloudViewer object={object} part={part} mode={mode} />
+          ) : (
+            <div className="viewer-placeholder">Interactive viewer loads on approach</div>
+          )}
         </div>
         <div className="viewer-controls">
           <div>
@@ -261,7 +302,7 @@ function MethodSection() {
         <p>Frozen visual-language features meet local 3D geometry through instruction-aware bidirectional reasoning.</p>
       </div>
       <figure className="paper-figure architecture-figure">
-        <img src="assets/paper/architecture.webp" alt="AffordAny decoder architecture" />
+        <img src="assets/paper/architecture.webp" alt="AffordAny decoder architecture" loading="lazy" decoding="async" />
       </figure>
       <div className="method-notes">
         <div><Box /><p><strong>Projection injection</strong><br />Connects visible 3D points with image tokens.</p></div>
@@ -280,7 +321,12 @@ function ResultsSection() {
         <p>One evaluation protocol, three ways to be unseen: object, category, and instruction.</p>
       </div>
       <figure className="paper-figure original-figure comparison-original">
-        <img src="assets/paper/comparison.svg" alt="Original AffordAny qualitative comparison figure" />
+        <img
+          src="assets/paper/comparison.svg"
+          alt="Original AffordAny qualitative comparison figure"
+          loading="lazy"
+          decoding="async"
+        />
         <figcaption>The original qualitative comparison figure from the paper. <a href="assets/paper/comparison.pdf" target="_blank" rel="noreferrer">Open original PDF</a></figcaption>
       </figure>
       <div className="result-summary">

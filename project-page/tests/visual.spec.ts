@@ -9,6 +9,8 @@ test("renders the complete project page and a nonblank WebGL scene", async ({ pa
 
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "AffordAny", exact: true })).toBeVisible();
+  const interactive = page.locator("#interactive");
+  await interactive.scrollIntoViewIfNeeded();
   const canvas = page.locator("canvas");
   await expect(canvas).toBeVisible();
   await expect(page.locator(".viewer-loading")).toHaveCount(0, { timeout: 15_000 });
@@ -65,8 +67,11 @@ test("renders the complete project page and a nonblank WebGL scene", async ({ pa
     return Math.abs(renderedRatio - naturalRatio);
   });
   expect(imageFit).toBeLessThan(0.02);
-  await expect(page.locator('img[src$="teaser.svg"]')).toBeVisible();
-  await expect(page.locator('img[src$="comparison.svg"]')).toBeVisible();
+  for (const selector of ['img[src$="teaser.svg"]', 'img[src$="comparison.svg"]']) {
+    const image = page.locator(selector);
+    await image.scrollIntoViewIfNeeded();
+    await expect.poll(() => image.evaluate((element: HTMLImageElement) => element.naturalWidth)).toBeGreaterThan(0);
+  }
 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(1);

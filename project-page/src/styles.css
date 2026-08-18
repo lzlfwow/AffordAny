@@ -170,6 +170,7 @@ select { min-height: 38px; padding: 0 34px 0 11px; border: 1px solid #cdd1d3; bo
 .hero-stage canvas { touch-action: none; }
 .hero-stage:fullscreen { background: #111311; }
 .viewer-loading { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; color: #9ba39f; font-size: 13px; }
+.viewer-placeholder { position: absolute; inset: 0; display: grid; place-items: center; color: #7f8783; font-size: 13px; }
 .viewer-tools { position: absolute; top: 18px; right: 18px; z-index: 4; display: flex; gap: 7px; }
 .icon-button { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid #414744; border-radius: 4px; background: rgba(20, 22, 21, 0.84); color: #f0f2f0; }
 .viewer-controls { padding-top: 22px; display: grid; grid-template-columns: auto minmax(320px, 1fr) auto; gap: 28px; align-items: end; }

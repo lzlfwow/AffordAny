@@ -8,9 +8,24 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parents[1]
-TEXT_SUFFIXES = {".cff", ".json", ".md", ".py", ".sh", ".toml", ".txt", ".yaml", ".yml"}
+TEXT_SUFFIXES = {
+    ".cff",
+    ".css",
+    ".html",
+    ".json",
+    ".md",
+    ".py",
+    ".sh",
+    ".toml",
+    ".ts",
+    ".tsx",
+    ".txt",
+    ".yaml",
+    ".yml",
+}
 FORBIDDEN_DIRS = {"__pycache__", ".pytest_cache", "artifacts", "checkpoints", "outputs"}
 FORBIDDEN_SUFFIXES = {".ckpt", ".pem", ".pth", ".pt", ".safetensors"}
+IGNORED_DIRS = {".git", "dist", "node_modules", "playwright-report", "test-results"}
 ABSOLUTE_MACHINE_PATHS = re.compile(r"/(?:disk|mnt)/")
 EMBEDDED_SECRET = re.compile(
     r"(?i)(?:api[_-]?key|access[_-]?token|secret)\s*[:=]\s*['\"][A-Za-z0-9_./+-]{16,}['\"]"
@@ -19,7 +34,12 @@ MAX_FILE_BYTES = 10 * 1024 * 1024
 
 
 def iter_release_files() -> list[Path]:
-    return sorted(path for path in ROOT.rglob("*") if path.is_file() or path.is_symlink())
+    return sorted(
+        path
+        for path in ROOT.rglob("*")
+        if not any(part in IGNORED_DIRS for part in path.relative_to(ROOT).parts)
+        and (path.is_file() or path.is_symlink())
+    )
 
 
 def check_release(strict: bool) -> tuple[list[str], list[str]]:

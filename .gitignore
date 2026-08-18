@@ -29,3 +29,10 @@ checkpoints/
 .DS_Store
 .idea/
 .vscode/
+
+# Project page dependencies and build output
+node_modules/
+dist/
+*.tsbuildinfo
+playwright-report/
+test-results/

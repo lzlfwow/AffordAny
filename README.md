@@ -24,6 +24,7 @@ AffordAny/
 |-- models/affordance_decoder_selftraining_v1/
 |   |-- src/                                   # Pseudo-label training losses/data
 |   `-- scripts/                               # Manifest builder and training
+|-- project-page/                              # Interactive paper and dataset demo
 |-- data/README.md                             # Dataset placement and release plan
 |-- third_party/README.md                      # External dependency setup
 |-- scripts/check_release.py                   # Pre-publication checks
@@ -110,6 +111,20 @@ python -m compileall -q .
 `python scripts/check_release.py --strict` is the final publication gate. It
 also requires the license and citation metadata that will be added after the
 remaining release decisions are confirmed.
+
+## Project page
+
+The interactive project page lives in `project-page/`. It uses the paper's
+figures for visual consistency and includes a Three.js point-cloud viewer,
+dataset explorer, architecture overview, and benchmark results.
+
+```bash
+cd project-page
+npm install
+npm run dev
+```
+
+Pushes that modify the page trigger the GitHub Pages deployment workflow.
 
 ## Checkpoints
 

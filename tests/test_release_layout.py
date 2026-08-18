@@ -5,6 +5,11 @@ import unittest
 
 
 ROOT = Path(__file__).resolve().parents[1]
+IGNORED_DIRS = {".git", "dist", "node_modules", "playwright-report", "test-results"}
+
+
+def is_ignored(path: Path) -> bool:
+    return any(part in IGNORED_DIRS for part in path.relative_to(ROOT).parts)
 
 
 class ReleaseLayoutTest(unittest.TestCase):
@@ -19,11 +24,11 @@ class ReleaseLayoutTest(unittest.TestCase):
                 self.assertTrue(path.is_dir())
 
     def test_experiment_artifacts_are_excluded(self) -> None:
-        forbidden = {"__pycache__", "artifacts", "checkpoints", "outputs"}
+        forbidden = {"artifacts", "checkpoints", "outputs"}
         violations = [
             path.relative_to(ROOT)
             for path in ROOT.rglob("*")
-            if path.is_dir() and path.name in forbidden
+            if not is_ignored(path) and path.is_dir() and path.name in forbidden
         ]
         self.assertEqual(violations, [])
 
@@ -31,6 +36,8 @@ class ReleaseLayoutTest(unittest.TestCase):
         violations: list[Path] = []
         machine_prefixes = ("/" + "mnt/", "/" + "disk/")
         for path in ROOT.rglob("*.sh"):
+            if is_ignored(path):
+                continue
             content = path.read_text(encoding="utf-8")
             if any(prefix in content for prefix in machine_prefixes):
                 violations.append(path.relative_to(ROOT))

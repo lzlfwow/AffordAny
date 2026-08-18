@@ -19,6 +19,9 @@ npm run build
 
 The site is deployed from `.github/workflows/pages.yml`. Paths are relative so
 the same build works locally and under the repository's GitHub Pages prefix.
+Before the first deployment, a repository owner must select **GitHub Actions**
+as the source under **Settings > Pages**. Later page changes deploy
+automatically when they are pushed to `main`.
 
 ## Preparing assets
 

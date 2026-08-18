@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Generated data and training artifacts
+data/lvis/
+research/pipeline/outputs/
+artifacts/
+outputs/
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+
+# Logs and local editor files
+*.log
+.DS_Store
+.idea/
+.vscode/

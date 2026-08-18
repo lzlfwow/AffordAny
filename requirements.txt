@@ -1,0 +1,8 @@
+numpy
+Pillow
+plyfile
+pycocotools
+requests
+scikit-learn
+scipy
+torch

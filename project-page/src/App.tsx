@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   BookOpen,
   Box,
@@ -8,8 +8,7 @@ import {
   Layers3,
   ScanSearch,
 } from "lucide-react";
-import PointCloudViewer, { type ViewerMode } from "./PointCloudViewer";
-import { heroCandidates, heroObjects, samples, stats, type Sample } from "./data";
+import { heroCandidates, samples, stats, type Sample } from "./data";
 
 const imageModes = ["source", "geometry", "annotation", "prediction"] as const;
 type ImageMode = (typeof imageModes)[number];
@@ -28,7 +27,6 @@ function SiteNav() {
       <div>
         <a href="#overview">Overview</a>
         <a href="#dataset">Dataset</a>
-        <a href="#interactive">Interactive 3D</a>
         <a href="#method">Method</a>
         <a href="#results">Results</a>
         <a href="https://github.com/lzlfwow/AffordAny" target="_blank" rel="noreferrer">Code</a>
@@ -212,80 +210,6 @@ function DatasetExplorer() {
   );
 }
 
-function InteractiveSection() {
-  const [objectIndex, setObjectIndex] = useState(0);
-  const [partIndex, setPartIndex] = useState(heroObjects[0].defaultPart);
-  const [mode, setMode] = useState<ViewerMode>("affordance");
-  const [viewerReady, setViewerReady] = useState(false);
-  const viewerHost = useRef<HTMLDivElement>(null);
-  const object = heroObjects[objectIndex];
-  const part = object.parts[Math.min(partIndex, object.parts.length - 1)];
-
-  useEffect(() => setPartIndex(object.defaultPart), [object.defaultPart]);
-
-  useEffect(() => {
-    const host = viewerHost.current;
-    if (!host || typeof IntersectionObserver === "undefined") {
-      setViewerReady(true);
-      return;
-    }
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setViewerReady(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "400px" },
-    );
-    observer.observe(host);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <section className="interactive-section" id="interactive">
-      <div className="interactive-inner">
-        <div className="section-heading centered inverse">
-          <h2>Interactive 3D Examples</h2>
-          <p>Rotate the reconstructed object and compare geometry, part annotations, and predicted affordance.</p>
-        </div>
-        <div className="point-viewer-shell" ref={viewerHost}>
-          {viewerReady ? (
-            <PointCloudViewer object={object} part={part} mode={mode} />
-          ) : (
-            <div className="viewer-placeholder">Interactive viewer loads on approach</div>
-          )}
-        </div>
-        <div className="viewer-controls">
-          <div>
-            <span>Object</span>
-            <div className="segmented dark object-picker">
-              {heroObjects.map((item, index) => (
-                <button type="button" key={item.id} className={index === objectIndex ? "active" : ""} onClick={() => setObjectIndex(index)}>{item.label}</button>
-              ))}
-            </div>
-          </div>
-          <div className="instruction-control">
-            <span>Instruction</span>
-            <p>“{part.instruction}”</p>
-            <select value={part.name} onChange={(event) => setPartIndex(object.parts.findIndex((item) => item.name === event.target.value))} aria-label="Target part">
-              {object.parts.map((item) => <option value={item.name} key={item.name}>{item.label}</option>)}
-            </select>
-          </div>
-          <div className="mode-control">
-            <span>View</span>
-            <div className="segmented dark">
-              {(["geometry", "parts", "affordance"] as ViewerMode[]).map((item) => (
-                <button type="button" key={item} className={mode === item ? "active" : ""} onClick={() => setMode(item)}>{item === "affordance" ? "Prediction" : item[0].toUpperCase() + item.slice(1)}</button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function MethodSection() {
   return (
     <section className="content-section" id="method">
@@ -353,7 +277,6 @@ export default function App() {
         <PaperOverview />
         <DatasetSection />
         <DatasetExplorer />
-        <InteractiveSection />
         <MethodSection />
         <ResultsSection />
       </main>

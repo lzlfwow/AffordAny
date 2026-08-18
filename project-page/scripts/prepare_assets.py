@@ -4,19 +4,8 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 import shutil
-import struct
 import subprocess
 import tempfile
-
-
-POINT_CLOUDS = {
-    "wok": "research/teaser_materials/02_wok_lid_handle/03_annotation_vis/gaussian_part_scores_colored.ply",
-    "microwave": "research/teaser_materials/all_objects/49_microwave_oven_button/03_annotation_vis/gaussian_part_scores_colored.ply",
-    "lamp": "research/teaser_materials/pipeline_figure/lamp_09/03_annotation_vis/gaussian_part_scores_colored.ply",
-    "steering_wheel": "research/teaser_materials/all_objects/29_steering_wheel_horn_button/03_annotation_vis/gaussian_part_scores_colored.ply",
-    "tennis_racket": "research/teaser_materials/all_objects/06_tennis_racket_strings/03_annotation_vis/gaussian_part_scores_colored.ply",
-    "hairbrush": "research/teaser_materials/all_objects/03_hairbrush_handle/03_annotation_vis/gaussian_part_scores_colored.ply",
-}
 
 SAMPLES = {
     "wok": "research/teaser_materials/02_wok_lid_handle",
@@ -79,49 +68,6 @@ def pair_webp(source: Path, prediction: Path, output: Path) -> None:
     )
 
 
-def downsample_ascii_ply(source: Path, output: Path, max_points: int = 60_000) -> None:
-    with source.open("r", encoding="ascii") as handle:
-        header: list[str] = []
-        vertex_count = 0
-        while True:
-            line = handle.readline()
-            if not line:
-                raise ValueError(f"invalid PLY header: {source}")
-            header.append(line)
-            if line.startswith("format ") and "ascii" not in line:
-                raise ValueError(f"only ASCII PLY input is supported: {source}")
-            if line.startswith("element vertex "):
-                vertex_count = int(line.split()[-1])
-            if line.strip() == "end_header":
-                break
-        if vertex_count <= 0:
-            raise ValueError(f"missing vertex count: {source}")
-
-        stride = max(1, (vertex_count + max_points - 1) // max_points)
-        selected_count = (vertex_count + stride - 1) // stride
-        output.parent.mkdir(parents=True, exist_ok=True)
-        with output.open("wb") as target:
-            target.write(b"ply\n")
-            target.write(b"format binary_little_endian 1.0\n")
-            target.write(f"element vertex {selected_count}\n".encode("ascii"))
-            target.write(b"property float x\nproperty float y\nproperty float z\n")
-            target.write(b"property uchar red\nproperty uchar green\nproperty uchar blue\nend_header\n")
-            written = 0
-            for index in range(vertex_count):
-                line = handle.readline()
-                if index % stride:
-                    continue
-                values = line.split()
-                if len(values) < 6:
-                    raise ValueError(f"invalid vertex row {index}: {source}")
-                xyz = (float(values[0]), float(values[1]), float(values[2]))
-                rgb = (int(values[3]), int(values[4]), int(values[5]))
-                target.write(struct.pack("<fffBBB", *xyz, *rgb))
-                written += 1
-            if written != selected_count:
-                raise RuntimeError(f"expected {selected_count} points, wrote {written}")
-
-
 def main() -> None:
     parser = argparse.ArgumentParser(description="Prepare static assets for the AffordAny project page")
     parser.add_argument("workspace_root", type=Path, help="Experimental AffordAny workspace containing paper_formal and research")
@@ -136,9 +82,6 @@ def main() -> None:
     to_webp(workspace / "paper_formal/figs/overview_v3_7.drawio.png", paper_output / "architecture.webp", max_width=1700)
     pdf_to_svg(workspace / "paper_formal/figs/comparison_v2_red.pdf", paper_output / "comparison.svg")
     shutil.copy2(workspace / "paper_formal/figs/comparison_v2_red.pdf", paper_output / "comparison.pdf")
-
-    for name, relative_path in POINT_CLOUDS.items():
-        downsample_ascii_ply(workspace / relative_path, output_root / "pointclouds" / f"{name}.ply")
 
     for sample_id, relative_dir in SAMPLES.items():
         source_dir = workspace / relative_dir

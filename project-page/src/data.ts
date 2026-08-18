@@ -11,6 +11,7 @@ export type HeroObject = {
   ply: string;
   split: string;
   iou: string;
+  defaultPart: number;
   parts: Part[];
 };
 
@@ -21,6 +22,7 @@ export const heroObjects: HeroObject[] = [
     ply: "assets/pointclouds/wok.ply",
     split: "Unseen instruction",
     iou: "0.86",
+    defaultPart: 1,
     parts: [
       { name: "handle", label: "Handle", instruction: "Pick up the wok by its side handle.", color: [191, 219, 254] },
       { name: "lid_handle", label: "Lid handle", instruction: "Hold the center knob so you can take the lid off.", color: [60, 210, 160] },
@@ -33,6 +35,7 @@ export const heroObjects: HeroObject[] = [
     ply: "assets/pointclouds/microwave.ply",
     split: "Unseen instruction",
     iou: "0.83",
+    defaultPart: 1,
     parts: [
       { name: "door", label: "Door", instruction: "Pull the front panel to open the oven.", color: [126, 151, 174] },
       { name: "button", label: "Button", instruction: "Press the control to start heating.", color: [177, 171, 163] },
@@ -44,10 +47,49 @@ export const heroObjects: HeroObject[] = [
     ply: "assets/pointclouds/lamp.ply",
     split: "Unseen instruction",
     iou: "0.79",
+    defaultPart: 0,
     parts: [
       { name: "base", label: "Base", instruction: "Steady the base so the lamp does not wobble.", color: [221, 235, 249] },
       { name: "lamp_head", label: "Lamp head", instruction: "Aim the light using the lamp head.", color: [173, 184, 194] },
       { name: "arm", label: "Arm", instruction: "Move the arm to adjust the light.", color: [126, 217, 87] },
+    ],
+  },
+  {
+    id: "steering_wheel",
+    label: "Steering wheel",
+    ply: "assets/pointclouds/steering_wheel.ply",
+    split: "Unseen instruction",
+    iou: "0.96",
+    defaultPart: 1,
+    parts: [
+      { name: "steering_rim", label: "Steering rim", instruction: "Turn the steering rim to steer the vehicle.", color: [192, 222, 252] },
+      { name: "horn_button", label: "Horn button", instruction: "Press the center pad to sound the horn.", color: [165, 65, 165] },
+      { name: "turn_signal_lever", label: "Turn-signal lever", instruction: "Move the lever to signal a turn.", color: [255, 169, 77] },
+    ],
+  },
+  {
+    id: "tennis_racket",
+    label: "Tennis racket",
+    ply: "assets/pointclouds/tennis_racket.ply",
+    split: "Unseen object",
+    iou: "0.79",
+    defaultPart: 2,
+    parts: [
+      { name: "grip", label: "Grip", instruction: "Hold the racket by its grip.", color: [131, 171, 211] },
+      { name: "frame", label: "Frame", instruction: "Hold the frame while restringing the racket.", color: [63, 183, 103] },
+      { name: "strings", label: "Strings", instruction: "Hit the ball with the string area.", color: [81, 221, 161] },
+    ],
+  },
+  {
+    id: "hairbrush",
+    label: "Hairbrush",
+    ply: "assets/pointclouds/hairbrush.ply",
+    split: "Unseen category",
+    iou: "0.81",
+    defaultPart: 0,
+    parts: [
+      { name: "handle", label: "Handle", instruction: "Please grab the brush by the base.", color: [195, 195, 195] },
+      { name: "bristle_head", label: "Bristle head", instruction: "Run the bristles through your hair.", color: [202, 132, 62] },
     ],
   },
 ];

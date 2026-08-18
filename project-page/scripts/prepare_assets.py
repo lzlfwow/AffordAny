@@ -13,6 +13,9 @@ POINT_CLOUDS = {
     "wok": "research/teaser_materials/02_wok_lid_handle/03_annotation_vis/gaussian_part_scores_colored.ply",
     "microwave": "research/teaser_materials/all_objects/49_microwave_oven_button/03_annotation_vis/gaussian_part_scores_colored.ply",
     "lamp": "research/teaser_materials/pipeline_figure/lamp_09/03_annotation_vis/gaussian_part_scores_colored.ply",
+    "steering_wheel": "research/teaser_materials/all_objects/29_steering_wheel_horn_button/03_annotation_vis/gaussian_part_scores_colored.ply",
+    "tennis_racket": "research/teaser_materials/all_objects/06_tennis_racket_strings/03_annotation_vis/gaussian_part_scores_colored.ply",
+    "hairbrush": "research/teaser_materials/all_objects/03_hairbrush_handle/03_annotation_vis/gaussian_part_scores_colored.ply",
 }
 
 SAMPLES = {
@@ -34,7 +37,7 @@ SAMPLE_FILES = {
 HERO_CANDIDATES = {
     "tennis_racket": "research/teaser_materials/batch_6cats_x5/tennis_racket_04",
     "lamp": "research/teaser_materials/batch_6cats_x5/lamp_01",
-    "steering_wheel": "research/teaser_materials/batch_6cats_x5/steering_wheel_03",
+    "steering_wheel": "research/teaser_materials/batch_6cats_x5/steering_wheel_04",
     "bottle": "research/teaser_materials/batch_6cats_x5/bottle_02",
     "phone": "research/teaser_materials/batch_6cats_x5/cellular_telephone_05",
     "hairbrush": "research/teaser_materials/batch_6cats_x5/hairbrush_02",

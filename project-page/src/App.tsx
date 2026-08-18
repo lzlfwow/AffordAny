@@ -214,14 +214,14 @@ function DatasetExplorer() {
 
 function InteractiveSection() {
   const [objectIndex, setObjectIndex] = useState(0);
-  const [partIndex, setPartIndex] = useState(1);
+  const [partIndex, setPartIndex] = useState(heroObjects[0].defaultPart);
   const [mode, setMode] = useState<ViewerMode>("affordance");
   const [viewerReady, setViewerReady] = useState(false);
   const viewerHost = useRef<HTMLDivElement>(null);
   const object = heroObjects[objectIndex];
   const part = object.parts[Math.min(partIndex, object.parts.length - 1)];
 
-  useEffect(() => setPartIndex(object.id === "wok" ? 1 : 0), [object.id]);
+  useEffect(() => setPartIndex(object.defaultPart), [object.defaultPart]);
 
   useEffect(() => {
     const host = viewerHost.current;
@@ -259,7 +259,7 @@ function InteractiveSection() {
         <div className="viewer-controls">
           <div>
             <span>Object</span>
-            <div className="segmented dark">
+            <div className="segmented dark object-picker">
               {heroObjects.map((item, index) => (
                 <button type="button" key={item.id} className={index === objectIndex ? "active" : ""} onClick={() => setObjectIndex(index)}>{item.label}</button>
               ))}

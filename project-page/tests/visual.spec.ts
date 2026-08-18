@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("renders the complete project page and a nonblank WebGL scene", async ({ page }, testInfo) => {
+  test.setTimeout(60_000);
   const browserErrors: string[] = [];
   page.on("pageerror", (error) => browserErrors.push(error.message));
   page.on("console", (message) => {
@@ -50,9 +51,23 @@ test("renders the complete project page and a nonblank WebGL scene", async ({ pa
   await page.getByRole("button", { name: "Microwave", exact: true }).click();
   await microwaveLoaded;
   await expect(page.locator(".viewer-loading")).toHaveCount(0, { timeout: 15_000 });
-  await expect(page.locator(".viewer-controls")).toContainText("Pull the front panel to open the oven.");
+  await expect(page.locator(".viewer-controls")).toContainText("Press the control to start heating.");
   await page.getByRole("button", { name: "Parts", exact: true }).click();
   await expect(page.getByRole("button", { name: "Parts", exact: true })).toHaveClass(/active/);
+
+  for (const [label, asset] of [
+    ["Steering wheel", "steering_wheel.ply"],
+    ["Tennis racket", "tennis_racket.ply"],
+    ["Hairbrush", "hairbrush.ply"],
+  ]) {
+    const objectLoaded = page.waitForResponse(
+      (response) => response.url().endsWith(`/assets/pointclouds/${asset}`) && response.ok(),
+    );
+    await page.getByRole("button", { name: label, exact: true }).click();
+    await objectLoaded;
+    await expect(page.locator(".viewer-loading")).toHaveCount(0, { timeout: 15_000 });
+  }
+  await expect(page.locator(".viewer-controls")).toContainText("Please grab the brush by the base.");
 
   const explorer = page.locator("#explorer");
   await explorer.getByLabel("Evaluation split").selectOption("Unseen category");

@@ -63,7 +63,7 @@ function Cloud({ object, part, mode }: { object: HeroObject; part: Part; mode: V
   });
 
   return (
-    <group ref={group} position={[0.82, -0.05, 0]} scale={1.38 / radius} rotation={[-0.2, 0.45, 0]}>
+    <group ref={group} position={[0, -0.05, 0]} scale={1.38 / radius} rotation={[-0.2, 0.45, 0]}>
       <points geometry={geometry}>
         <pointsMaterial vertexColors size={0.011 * radius} sizeAttenuation transparent opacity={0.96} />
       </points>

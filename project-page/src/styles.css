@@ -169,13 +169,15 @@ select { min-height: 38px; padding: 0 34px 0 11px; border: 1px solid #cdd1d3; bo
 .viewer-tools { position: absolute; top: 18px; right: 18px; z-index: 4; display: flex; gap: 7px; }
 .icon-button { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid #414744; border-radius: 4px; background: rgba(20, 22, 21, 0.84); color: #f0f2f0; }
 .viewer-controls { padding-top: 22px; display: grid; grid-template-columns: auto minmax(320px, 1fr) auto; gap: 28px; align-items: end; }
+.viewer-controls > div { min-width: 0; }
 .viewer-controls > div > span { display: block; margin-bottom: 8px; color: #909995; font-size: 9px; font-weight: 750; text-transform: uppercase; }
 .segmented.dark { border-color: #3d4440; color: #bbc2be; }
 .segmented.dark button { border-right-color: #3d4440; }
 .segmented.dark button.active { background: #f2f4f2; color: #171a18; }
+.object-picker { width: 100%; max-width: 100%; overflow-x: auto; }
 .instruction-control { position: relative; }
-.instruction-control p { margin: 0; padding-right: 135px; font-family: Georgia, "Times New Roman", serif; font-size: 15px; line-height: 1.5; }
-.instruction-control select { position: absolute; right: 0; bottom: 0; width: 125px; border-color: #414945; background: #1d211f; color: #f2f4f2; }
+.instruction-control p { margin: 0; padding-right: 190px; font-family: Georgia, "Times New Roman", serif; font-size: 15px; line-height: 1.5; }
+.instruction-control select { position: absolute; right: 0; bottom: 0; width: 180px; border-color: #414945; background: #1d211f; color: #f2f4f2; }
 
 .architecture-figure { max-width: 980px; margin: 0 auto; }
 .method-notes { max-width: 980px; margin: 34px auto 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; }
@@ -238,8 +240,8 @@ footer small { grid-column: 1 / -1; padding-top: 20px; border-top: 1px solid #dd
   .point-viewer-shell { height: 460px; }
   .viewer-controls { grid-template-columns: 1fr; }
   .instruction-control { grid-column: auto; grid-row: auto; }
-  .instruction-control p { min-height: 52px; padding-right: 118px; }
-  .instruction-control select { width: 110px; }
+  .instruction-control p { min-height: 52px; padding-right: 180px; }
+  .instruction-control select { width: 170px; }
   .method-notes { grid-template-columns: 1fr; gap: 22px; }
   .result-summary { grid-template-columns: 1fr; }
   .result-summary > div { min-height: 76px; border-top: 1px solid var(--line); border-left: 0; }

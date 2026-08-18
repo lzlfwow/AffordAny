@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+import shutil
 import struct
 import subprocess
 import tempfile
@@ -30,6 +31,15 @@ SAMPLE_FILES = {
     "prediction": "04_model_prediction_heatmap.png",
 }
 
+HERO_CANDIDATES = {
+    "tennis_racket": "research/teaser_materials/batch_6cats_x5/tennis_racket_04",
+    "lamp": "research/teaser_materials/batch_6cats_x5/lamp_01",
+    "steering_wheel": "research/teaser_materials/batch_6cats_x5/steering_wheel_03",
+    "bottle": "research/teaser_materials/batch_6cats_x5/bottle_02",
+    "phone": "research/teaser_materials/batch_6cats_x5/cellular_telephone_05",
+    "hairbrush": "research/teaser_materials/batch_6cats_x5/hairbrush_02",
+}
+
 
 def run(*args: str) -> None:
     subprocess.run(args, check=True)
@@ -49,6 +59,11 @@ def pdf_to_webp(source: Path, output: Path, max_width: int = 1900) -> None:
         raster = Path(temp_dir) / "page"
         run("pdftoppm", "-png", "-r", "160", "-singlefile", str(source), str(raster))
         to_webp(raster.with_suffix(".png"), output, max_width=max_width)
+
+
+def pdf_to_svg(source: Path, output: Path) -> None:
+    output.parent.mkdir(parents=True, exist_ok=True)
+    run("pdftocairo", "-svg", str(source), str(output))
 
 
 def downsample_ascii_ply(source: Path, output: Path, max_points: int = 60_000) -> None:
@@ -102,10 +117,12 @@ def main() -> None:
     output_root = Path(__file__).resolve().parents[1] / "public" / "assets"
 
     paper_output = output_root / "paper"
-    pdf_to_webp(workspace / "paper_formal/figs/teaser.pdf", paper_output / "teaser.webp")
+    pdf_to_svg(workspace / "paper_formal/figs/teaser.pdf", paper_output / "teaser.svg")
+    shutil.copy2(workspace / "paper_formal/figs/teaser.pdf", paper_output / "teaser.pdf")
     pdf_to_webp(workspace / "paper_formal/figs/pipline.pdf", paper_output / "pipeline.webp")
     to_webp(workspace / "paper_formal/figs/overview_v3_7.drawio.png", paper_output / "architecture.webp", max_width=1700)
-    to_webp(workspace / "paper_formal/figs/comparison_v2_red.png", paper_output / "comparison.webp", max_width=1900)
+    pdf_to_svg(workspace / "paper_formal/figs/comparison_v2_red.pdf", paper_output / "comparison.svg")
+    shutil.copy2(workspace / "paper_formal/figs/comparison_v2_red.pdf", paper_output / "comparison.pdf")
 
     for name, relative_path in POINT_CLOUDS.items():
         downsample_ascii_ply(workspace / relative_path, output_root / "pointclouds" / f"{name}.ply")
@@ -114,6 +131,19 @@ def main() -> None:
         source_dir = workspace / relative_dir
         for output_name, source_name in SAMPLE_FILES.items():
             to_webp(source_dir / source_name, output_root / "samples" / sample_id / f"{output_name}.webp", max_width=900)
+
+    for sample_id, relative_dir in HERO_CANDIDATES.items():
+        source_dir = workspace / relative_dir
+        to_webp(
+            source_dir / "00_source_highlighted.png",
+            output_root / "hero" / sample_id / "source.webp",
+            max_width=900,
+        )
+        to_webp(
+            source_dir / "04_model_prediction_heatmap.png",
+            output_root / "hero" / sample_id / "prediction.webp",
+            max_width=900,
+        )
 
     print(f"Prepared project-page assets under {output_root}")
 

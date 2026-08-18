@@ -16,6 +16,7 @@ TEXT_SUFFIXES = {
     ".md",
     ".py",
     ".sh",
+    ".svg",
     ".toml",
     ".ts",
     ".tsx",

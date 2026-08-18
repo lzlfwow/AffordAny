@@ -85,3 +85,19 @@ export const stats = [
   ["473", "Categories"],
   ["678", "Part types"],
 ];
+
+export const heroCandidates = [
+  ["tennis_racket", "Tennis racket", "Handle", "Hold the racket by its handle."],
+  ["lamp", "Table lamp", "Base", "Steady the lamp by its base."],
+  ["steering_wheel", "Steering wheel", "Wheel", "Turn the wheel to steer."],
+  ["bottle", "Bottle", "Neck", "Hold the bottle at its neck."],
+  ["phone", "Cellular telephone", "Screen", "Tap the screen to use the phone."],
+  ["hairbrush", "Hairbrush", "Handle", "Grip the brush by its handle."],
+].map(([id, label, target, instruction]) => ({
+  id,
+  label,
+  target,
+  instruction,
+  source: `assets/hero/${id}/source.webp`,
+  prediction: `assets/hero/${id}/prediction.webp`,
+}));

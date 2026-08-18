@@ -46,19 +46,27 @@ test("renders the complete project page and a nonblank WebGL scene", async ({ pa
   );
   await page.getByRole("button", { name: "Microwave", exact: true }).click();
   await microwaveLoaded;
-  await expect(page.locator(".hero-controls")).toContainText("Pull the front panel to open the oven.");
-  if (testInfo.project.name === "desktop") {
-    await page.getByRole("button", { name: "Parts", exact: true }).click();
-    await expect(page.getByRole("button", { name: "Parts", exact: true })).toHaveClass(/active/);
-  } else {
-    await expect(page.locator(".mode-control")).toBeHidden();
-  }
+  await expect(page.locator(".viewer-loading")).toHaveCount(0, { timeout: 15_000 });
+  await expect(page.locator(".viewer-controls")).toContainText("Pull the front panel to open the oven.");
+  await page.getByRole("button", { name: "Parts", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Parts", exact: true })).toHaveClass(/active/);
 
-  const explorer = page.locator("#dataset");
+  const explorer = page.locator("#explorer");
   await explorer.getByLabel("Evaluation split").selectOption("Unseen category");
-  await expect(explorer.locator(".sample-item")).toHaveCount(2);
+  await expect(explorer.locator(".sample-selector button")).toHaveCount(2);
   await explorer.getByRole("button", { name: /Toilet/ }).click();
   await expect(explorer.locator(".sample-meta")).toContainText("Close the toilet lid.");
+
+  const explorerImage = explorer.locator(".sample-image-wrap img");
+  await expect.poll(() => explorerImage.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
+  const imageFit = await explorerImage.evaluate((image: HTMLImageElement) => {
+    const renderedRatio = image.getBoundingClientRect().width / image.getBoundingClientRect().height;
+    const naturalRatio = image.naturalWidth / image.naturalHeight;
+    return Math.abs(renderedRatio - naturalRatio);
+  });
+  expect(imageFit).toBeLessThan(0.02);
+  await expect(page.locator('img[src$="teaser.svg"]')).toBeVisible();
+  await expect(page.locator('img[src$="comparison.svg"]')).toBeVisible();
 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(1);

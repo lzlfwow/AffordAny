@@ -43,25 +43,17 @@ function HeroGallery() {
       {heroCandidates.map((item, index) => (
         <figure className="hero-case" key={item.id}>
           <div className="case-media">
-            <div>
+            <div className="case-labels" aria-hidden="true">
               <span>Monocular RGB</span>
-              <img
-                src={item.source}
-                alt={`${item.label} in its source image`}
-                loading={index < 2 ? "eager" : "lazy"}
-                decoding="async"
-                fetchPriority={index === 0 ? "high" : "auto"}
-              />
-            </div>
-            <div>
               <span>3D affordance</span>
-              <img
-                src={item.prediction}
-                alt={`${item.target} affordance prediction for ${item.label}`}
-                loading={index < 2 ? "eager" : "lazy"}
-                decoding="async"
-              />
             </div>
+            <img
+              src={item.pair}
+              alt={`${item.label} source image and ${item.target} affordance prediction`}
+              loading={index < 2 ? "eager" : "lazy"}
+              decoding="async"
+              fetchPriority={index === 0 ? "high" : "auto"}
+            />
           </div>
           <figcaption>
             <strong>{item.label} · {item.target}</strong>

@@ -98,6 +98,7 @@ export const heroCandidates = [
   label,
   target,
   instruction,
+  pair: `assets/hero/${id}/pair.webp`,
   source: `assets/hero/${id}/source.webp`,
   prediction: `assets/hero/${id}/prediction.webp`,
 }));

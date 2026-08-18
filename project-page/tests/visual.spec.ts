@@ -9,6 +9,7 @@ test("renders the complete project page and a nonblank WebGL scene", async ({ pa
 
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "AffordAny", exact: true })).toBeVisible();
+  await expect(page.locator(".hero-gallery .case-media img")).toHaveCount(6);
   const interactive = page.locator("#interactive");
   await interactive.scrollIntoViewIfNeeded();
   const canvas = page.locator("canvas");

@@ -61,14 +61,10 @@ img { display: block; max-width: 100%; }
 
 .hero-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; text-align: left; }
 .hero-case { margin: 0; overflow: hidden; border: 1px solid #d9dcde; border-radius: 6px; background: #fff; }
-.case-media { display: grid; grid-template-columns: 1fr 1fr; min-height: 176px; border-bottom: 1px solid #e1e3e5; }
-.case-media > div { position: relative; min-width: 0; background: #f7f7f7; }
-.case-media > div + div { border-left: 1px solid #e1e3e5; }
-.case-media span {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  z-index: 1;
+.case-media { position: relative; min-height: 176px; border-bottom: 1px solid #e1e3e5; background: #fff; }
+.case-labels { position: absolute; inset: 8px 8px auto; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; }
+.case-labels span {
+  justify-self: start;
   padding: 3px 6px;
   border-radius: 3px;
   background: rgba(255, 255, 255, 0.92);
@@ -77,8 +73,7 @@ img { display: block; max-width: 100%; }
   font-weight: 700;
   text-transform: uppercase;
 }
-.case-media img { width: 100%; height: 176px; object-fit: cover; }
-.case-media > div:last-child img { object-fit: contain; background: #fff; }
+.case-media img { width: 100%; height: 176px; object-fit: contain; background: #fff; }
 .hero-case figcaption { min-height: 70px; padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 5px; }
 .hero-case figcaption strong { font-size: 13px; }
 .hero-case figcaption span { color: var(--muted); font-family: Georgia, "Times New Roman", serif; font-size: 12px; line-height: 1.4; }

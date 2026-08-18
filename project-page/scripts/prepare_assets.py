@@ -66,6 +66,16 @@ def pdf_to_svg(source: Path, output: Path) -> None:
     run("pdftocairo", "-svg", str(source), str(output))
 
 
+def pair_webp(source: Path, prediction: Path, output: Path) -> None:
+    output.parent.mkdir(parents=True, exist_ok=True)
+    panel = "scale=640:640:force_original_aspect_ratio=decrease,pad=640:640:(ow-iw)/2:(oh-ih)/2:color=white"
+    run(
+        "ffmpeg", "-loglevel", "error", "-y", "-i", str(source), "-i", str(prediction),
+        "-filter_complex", f"[0:v]{panel}[source];[1:v]{panel}[prediction];[source][prediction]hstack",
+        "-c:v", "libwebp", "-quality", "86", str(output),
+    )
+
+
 def downsample_ascii_ply(source: Path, output: Path, max_points: int = 60_000) -> None:
     with source.open("r", encoding="ascii") as handle:
         header: list[str] = []
@@ -134,15 +144,22 @@ def main() -> None:
 
     for sample_id, relative_dir in HERO_CANDIDATES.items():
         source_dir = workspace / relative_dir
+        source_image = source_dir / "00_source_highlighted.png"
+        prediction_image = source_dir / "04_model_prediction_heatmap.png"
         to_webp(
-            source_dir / "00_source_highlighted.png",
+            source_image,
             output_root / "hero" / sample_id / "source.webp",
             max_width=900,
         )
         to_webp(
-            source_dir / "04_model_prediction_heatmap.png",
+            prediction_image,
             output_root / "hero" / sample_id / "prediction.webp",
             max_width=900,
+        )
+        pair_webp(
+            source_image,
+            prediction_image,
+            output_root / "hero" / sample_id / "pair.webp",
         )
 
     print(f"Prepared project-page assets under {output_root}")

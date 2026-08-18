@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import {
   BookOpen,
   Box,
-  Database,
   ExternalLink,
   Github,
   Layers3,
@@ -245,11 +244,6 @@ function ResultsSection() {
         />
         <figcaption>The original qualitative comparison figure from the paper. <a href="assets/paper/comparison.pdf" target="_blank" rel="noreferrer">Open original PDF</a></figcaption>
       </figure>
-      <div className="result-summary">
-        <div><Database /><span><strong>5,325</strong> disjoint pseudo-label objects</span></div>
-        <div><Box /><span><strong>+6.3%</strong> unseen-category mIoU</span></div>
-        <div><ScanSearch /><span><strong>p &lt; 0.01</strong> paired bootstrap</span></div>
-      </div>
     </section>
   );
 }

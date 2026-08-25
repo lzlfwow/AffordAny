@@ -8,12 +8,12 @@ import subprocess
 import tempfile
 
 SAMPLES = {
-    "wok": "research/teaser_materials/02_wok_lid_handle",
-    "microwave": "research/teaser_materials/all_objects/49_microwave_oven_button",
+    "umbrella": "research/teaser_materials/all_objects/28_umbrella_canopy",
+    "fork": "research/teaser_materials/all_objects/35_fork_tines",
     "phone": "research/teaser_materials/all_objects/15_cellular_telephone_power_button",
     "pan": "research/teaser_materials/all_objects/18_frying_pan_handle",
     "remote": "research/teaser_materials/all_objects/12_remote_control_channel_navigation_button",
-    "toilet": "research/teaser_materials/all_objects/23_toilet_lid",
+    "glass": "research/teaser_materials/all_objects/24_glass_(drink_container)_body",
 }
 
 SAMPLE_FILES = {

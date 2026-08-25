@@ -12,12 +12,24 @@ test("renders the complete project page without cropping key figures", async ({ 
   await expect(page.locator(".hero-gallery .case-media img")).toHaveCount(6);
 
   const explorer = page.locator("#explorer");
+  const explorerImage = explorer.locator(".sample-image-wrap img");
+
+  await explorer.getByLabel("Evaluation split").selectOption("Unseen instruction");
+  await expect(explorer.locator(".sample-selector button")).toHaveCount(3);
+  for (const sampleName of ["Umbrella", "Fork"]) {
+    await explorer.getByRole("button", { name: new RegExp(sampleName) }).click();
+    await expect(explorer.locator(".sample-meta h3")).toHaveText(sampleName);
+    for (const mode of ["Source image", "3D reconstruction", "Part annotation", "AffordAny"]) {
+      await explorer.getByRole("button", { name: mode, exact: true }).click();
+      await expect.poll(() => explorerImage.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
+    }
+  }
+
   await explorer.getByLabel("Evaluation split").selectOption("Unseen category");
   await expect(explorer.locator(".sample-selector button")).toHaveCount(2);
-  await explorer.getByRole("button", { name: /Toilet/ }).click();
-  await expect(explorer.locator(".sample-meta")).toContainText("Close the toilet lid.");
+  await explorer.getByRole("button", { name: /Drinking glass/ }).click();
+  await expect(explorer.locator(".sample-meta")).toContainText("holding it around its center.");
 
-  const explorerImage = explorer.locator(".sample-image-wrap img");
   await expect.poll(() => explorerImage.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
   const imageFit = await explorerImage.evaluate((image: HTMLImageElement) => {
     const renderedRatio = image.getBoundingClientRect().width / image.getBoundingClientRect().height;

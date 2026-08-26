@@ -2,12 +2,25 @@ import { useEffect, useMemo, useState } from "react";
 import {
   BookOpen,
   Box,
+  Check,
+  Copy,
   ExternalLink,
   Github,
   Layers3,
   ScanSearch,
 } from "lucide-react";
 import { heroCandidates, samples, stats, type Sample } from "./data";
+
+const paperUrl = "https://arxiv.org/abs/2608.20720";
+const citation = `@misc{wu2026affordanyopenworld3daffordance,
+      title={AffordAny: Open-World 3D Affordance Grounding from Monocular RGB Images via Vision-Language-Guided Geometric Reasoning},
+      author={Junqi Wu and Kaihua Tang and Xuanwen Chen and Hongzhi Li and Jianqiang Huang and Xian-Sheng Hua},
+      year={2026},
+      eprint={2608.20720},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2608.20720},
+}`;
 
 const imageModes = ["source", "geometry", "annotation", "prediction"] as const;
 type ImageMode = (typeof imageModes)[number];
@@ -70,7 +83,7 @@ function PublicationHeader() {
         VLM-Guided Open-World 3D Affordance Grounding<br />from a Monocular RGB Image
       </p>
       <div className="publication-links">
-        <a href="#overview"><BookOpen size={18} /><span>Paper</span></a>
+        <a href={paperUrl} target="_blank" rel="noreferrer"><BookOpen size={18} /><span>Paper</span></a>
         <a href="https://github.com/lzlfwow/AffordAny" target="_blank" rel="noreferrer">
           <Github size={18} /><span>Code</span>
         </a>
@@ -248,13 +261,39 @@ function ResultsSection() {
   );
 }
 
+function CitationSection() {
+  const [copied, setCopied] = useState(false);
+
+  async function copyCitation() {
+    await navigator.clipboard.writeText(citation);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1800);
+  }
+
+  return (
+    <section className="content-section citation-section" id="citation">
+      <div className="section-heading centered">
+        <h2>Citation</h2>
+        <p>Please cite our paper if AffordAny is useful in your research.</p>
+      </div>
+      <div className="citation-block">
+        <button type="button" onClick={copyCitation} aria-label="Copy BibTeX citation">
+          {copied ? <Check size={16} /> : <Copy size={16} />}
+          <span>{copied ? "Copied" : "Copy"}</span>
+        </button>
+        <pre><code>{citation}</code></pre>
+      </div>
+    </section>
+  );
+}
+
 function Footer() {
   return (
     <footer>
       <div><strong>AffordAny</strong><p>VLM-guided open-world 3D affordance grounding from a monocular RGB image.</p></div>
       <div>
         <a href="https://github.com/lzlfwow/AffordAny" target="_blank" rel="noreferrer"><Github size={17} />Code<ExternalLink size={13} /></a>
-        <span><BookOpen size={17} />Paper · arXiv pending</span>
+        <a href={paperUrl} target="_blank" rel="noreferrer"><BookOpen size={17} />Paper<ExternalLink size={13} /></a>
       </div>
       <small>Code released under Apache-2.0.</small>
     </footer>
@@ -273,6 +312,7 @@ export default function App() {
         <DatasetExplorer />
         <MethodSection />
         <ResultsSection />
+        <CitationSection />
       </main>
       <Footer />
     </>

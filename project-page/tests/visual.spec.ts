@@ -10,6 +10,7 @@ test("renders the complete project page without cropping key figures", async ({ 
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "AffordAny", exact: true })).toBeVisible();
   await expect(page.locator(".hero-gallery .case-media img")).toHaveCount(6);
+  await expect(page.locator('.publication-links a[href="https://arxiv.org/abs/2608.20720"]')).toBeVisible();
 
   const explorer = page.locator("#explorer");
   const explorerImage = explorer.locator(".sample-image-wrap img");
@@ -42,6 +43,11 @@ test("renders the complete project page without cropping key figures", async ({ 
     await image.scrollIntoViewIfNeeded();
     await expect.poll(() => image.evaluate((element: HTMLImageElement) => element.naturalWidth)).toBeGreaterThan(0);
   }
+
+  const citation = page.locator("#citation");
+  await expect(citation.locator("code")).toContainText("@misc{wu2026affordanyopenworld3daffordance,");
+  await expect(citation.locator("code")).toContainText("eprint={2608.20720}");
+  await expect(citation.locator("code")).toContainText("primaryClass={cs.CV}");
 
   expect(browserErrors).toEqual([]);
 

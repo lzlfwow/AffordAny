@@ -166,6 +166,28 @@ select { min-height: 38px; padding: 0 34px 0 11px; border: 1px solid #cdd1d3; bo
 
 .comparison-original { padding: 12px; }
 
+.citation-section { max-width: 1000px; }
+.citation-block { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 6px; background: #f7f7f7; }
+.citation-block pre { margin: 0; padding: 28px 94px 28px 28px; overflow-x: auto; color: #34383b; font: 13px/1.65 "SFMono-Regular", Consolas, "Liberation Mono", monospace; text-align: left; }
+.citation-block button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1;
+  min-height: 34px;
+  padding: 0 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #cfd3d5;
+  border-radius: 4px;
+  background: #fff;
+  color: #454b4f;
+  font-size: 11px;
+  font-weight: 680;
+}
+.citation-block button:hover { border-color: #9da3a7; color: var(--ink); }
+
 footer { padding: 48px max(22px, calc((100vw - 1156px) / 2)); display: grid; grid-template-columns: 1fr auto; gap: 28px; border-top: 1px solid var(--line); color: #51575b; background: #f7f7f7; }
 footer > div:first-child strong { color: var(--ink); font-size: 17px; }
 footer p { max-width: 600px; margin: 7px 0 0; color: var(--muted); font-size: 12px; }
@@ -207,6 +229,7 @@ footer small { grid-column: 1 / -1; padding-top: 20px; border-top: 1px solid #dd
   .sample-image-wrap img { max-height: none; }
   .sample-meta { border-top: 1px solid var(--line); border-left: 0; }
   .method-notes { grid-template-columns: 1fr; gap: 22px; }
+  .citation-block pre { padding: 58px 16px 20px; font-size: 11px; }
   footer { grid-template-columns: 1fr; padding: 40px 16px; }
   footer > div:nth-child(2) { flex-direction: column; gap: 14px; }
 }

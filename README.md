@@ -10,7 +10,9 @@
   <a href="https://www.modelscope.cn/datasets/lzlfwow/AffordAny">Dataset</a>
 </p>
 
-![AffordAny overview](project-page/public/assets/paper/teaser.svg)
+<p align="center">
+  <img src="project-page/public/assets/paper/teaser.svg" alt="AffordAny overview" width="100%" />
+</p>
 
 AffordAny converts a monocular RGB image and a free-form interaction
 instruction into an affordance heatmap over a reconstructed 3D object. This
@@ -71,8 +73,6 @@ The released benchmark is hosted on
 | ---: | ---: | ---: | ---: | ---: |
 | 5,334 | 10,633 | 31,899 | 473 | 678 |
 
-![AffordAny dataset construction pipeline](project-page/public/assets/paper/pipeline.webp)
-
 To construct the dataset from source data, prepare LVIS annotations and images
 under `data/lvis/`, then run the two-stage pipeline from the repository root:
 
@@ -105,8 +105,6 @@ python models/affordance_decoder_vlm_backbone_cosmos2b_v5/scripts/evaluate.py \
 
 Use `python .../train.py --help` and `python .../evaluate.py --help` for all
 configuration options.
-
-![AffordAny decoder architecture](project-page/public/assets/paper/architecture.webp)
 
 ## Pseudo-label self-training
 
